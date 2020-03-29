@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Americano"
+  },
+  {
+    "id": 2,
+    "name": "Cappuccino"
+  },
+  {
+    "id": 3,
+    "name": "Espresso"
+  },
+  {
+    "id": 4,
+    "name": "Espresso Macchiato"
+  },
+  {
+    "id": 5,
+    "name": "Frappino"
+  },
+  {
+    "id": 6,
+    "name": "Iced Mocha"
+  },
+  {
+    "id": 7,
+    "name": "Irish coffee"
+  },
+  {
+    "id": 8,
+    "name": "Latte"
+  },
+  {
+    "id": 9,
+    "name": "Latte Macchiato"
+  },
+  {
+    "id": 10,
+    "name": "Mocha"
+  }
+]
