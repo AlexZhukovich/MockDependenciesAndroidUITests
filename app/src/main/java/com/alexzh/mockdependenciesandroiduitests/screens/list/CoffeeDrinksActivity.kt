@@ -4,30 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexzh.mockdependenciesandroiduitests.R
-import com.alexzh.mockdependenciesandroiduitests.data.CoffeeDrinksRepository
-import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServiceFactory
 import com.alexzh.mockdependenciesandroiduitests.screens.common.UiState
-import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrinkMapper
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.net.UnknownHostException
 
 class CoffeeDrinksActivity : AppCompatActivity() {
+    private val viewModel: CoffeeDrinksViewModel by viewModel()
 
     private val adapter: CoffeeDrinkAdapter by lazy {
         CoffeeDrinkAdapter()
-    }
-
-    private val viewModel: CoffeeDrinksViewModel by lazy {
-        val coffeeDrinksService = CoffeeDrinksServiceFactory().create()
-        val repository = CoffeeDrinksRepository(coffeeDrinksService)
-        val mapper = CoffeeDrinkMapper()
-        val factory = CoffeeDrinksViewModelFactory(repository, mapper)
-        ViewModelProvider(this, factory).get(CoffeeDrinksViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
