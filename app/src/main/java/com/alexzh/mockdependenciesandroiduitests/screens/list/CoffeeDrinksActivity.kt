@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexzh.mockdependenciesandroiduitests.R
-import com.alexzh.mockdependenciesandroiduitests.data.CoffeeDrinksRepositoryImpl
+import com.alexzh.mockdependenciesandroiduitests.data.CoffeeDrinksRepository
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServiceFactory
 import com.alexzh.mockdependenciesandroiduitests.screens.common.UiState
 import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrinkMapper
@@ -24,7 +24,7 @@ class CoffeeDrinksActivity : AppCompatActivity() {
 
     private val viewModel: CoffeeDrinksViewModel by lazy {
         val coffeeDrinksService = CoffeeDrinksServiceFactory().create()
-        val repository = CoffeeDrinksRepositoryImpl(coffeeDrinksService)
+        val repository = CoffeeDrinksRepository(coffeeDrinksService)
         val mapper = CoffeeDrinkMapper()
         val factory = CoffeeDrinksViewModelFactory(repository, mapper)
         ViewModelProvider(this, factory).get(CoffeeDrinksViewModel::class.java)
