@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mock dependencies</string>
+
+    <string name="try_again_label">Try again</string>
+
+    <string name="error_network_message">No data available</string>
+    <string name="error_unknown_message">Something went wrong</string>
+</resources>
