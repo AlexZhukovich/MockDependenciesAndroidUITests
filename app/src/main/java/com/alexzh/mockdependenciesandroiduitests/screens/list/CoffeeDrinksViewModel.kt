@@ -10,8 +10,9 @@ import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrink
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-class CoffeeDrinksViewModel(
+class CoffeeDrinksViewModel @Inject constructor(
     private val repository: DrinksRepository,
     private val mapper: CoffeeDrinkMapper
 ): ViewModel() {

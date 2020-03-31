@@ -7,30 +7,30 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alexzh.mockdependenciesandroiduitests.CoffeeDrinksApp
 import com.alexzh.mockdependenciesandroiduitests.R
-import com.alexzh.mockdependenciesandroiduitests.data.CoffeeDrinksRepository
-import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServiceFactory
 import com.alexzh.mockdependenciesandroiduitests.screens.common.UiState
-import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrinkMapper
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.UnknownHostException
+import javax.inject.Inject
 
 class CoffeeDrinksActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: CoffeeDrinksViewModelFactory
 
     private val adapter: CoffeeDrinkAdapter by lazy {
         CoffeeDrinkAdapter()
     }
 
     private val viewModel: CoffeeDrinksViewModel by lazy {
-        val coffeeDrinksService = CoffeeDrinksServiceFactory().create()
-        val repository = CoffeeDrinksRepository(coffeeDrinksService)
-        val mapper = CoffeeDrinkMapper()
-        val factory = CoffeeDrinksViewModelFactory(repository, mapper)
-        ViewModelProvider(this, factory).get(CoffeeDrinksViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory).get(CoffeeDrinksViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as CoffeeDrinksApp).getAppComponent().inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
