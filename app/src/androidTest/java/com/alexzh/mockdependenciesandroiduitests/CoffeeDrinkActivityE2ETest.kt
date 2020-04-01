@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
-class CoffeeDrinkActivityTest {
+class CoffeeDrinkActivityE2ETest {
 
     @get:Rule
     val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java)
