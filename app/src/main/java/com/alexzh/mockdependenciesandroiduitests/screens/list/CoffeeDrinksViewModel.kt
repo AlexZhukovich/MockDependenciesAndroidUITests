@@ -20,6 +20,8 @@ class CoffeeDrinksViewModel(
     fun getCoffeeDrinks(): LiveData<UiState<List<CoffeeDrinkUI>>> = coffeeDrinks
 
     fun loadDrinks() {
+        coffeeDrinks.value = UiState.Loading
+
         viewModelScope.launch {
             try {
                 coffeeDrinks.value = UiState.Success(mapper.map(repository.getCoffeeDrinks()))
