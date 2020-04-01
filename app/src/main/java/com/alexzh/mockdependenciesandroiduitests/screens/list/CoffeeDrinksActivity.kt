@@ -39,14 +39,22 @@ class CoffeeDrinksActivity : AppCompatActivity() {
         viewModel.loadDrinks()
         viewModel.getCoffeeDrinks().observe(this, Observer {
             when (it) {
+                is UiState.Loading -> showLoadingProcess()
                 is UiState.Success -> showCoffeeDrinks(it.data)
                 is UiState.Error -> showErrorMessage(it.throwable)
             }
         })
     }
 
+    private fun showLoadingProcess() {
+        errorMessageGroup.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+    }
+
     private fun showCoffeeDrinks(coffeeDrinks: List<CoffeeDrinkUI>) {
         adapter.submitCoffeeDrinks(coffeeDrinks)
+        progressBar.visibility = View.GONE
         errorMessageGroup.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
     }
@@ -59,8 +67,9 @@ class CoffeeDrinksActivity : AppCompatActivity() {
                 R.string.error_unknown_message
             }
         )
-        errorMessageGroup.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
         recyclerView.visibility = View.GONE
+        errorMessageGroup.visibility = View.VISIBLE
     }
 
     private fun setupUI() {
