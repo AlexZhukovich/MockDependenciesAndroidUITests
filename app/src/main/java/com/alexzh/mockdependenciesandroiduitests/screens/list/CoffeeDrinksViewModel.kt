@@ -10,6 +10,7 @@ import com.alexzh.mockdependenciesandroiduitests.screens.list.exception.NoDataAv
 import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrinkMapper
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class CoffeeDrinksViewModel constructor(
     private val repository: DrinksRepository,
