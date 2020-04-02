@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexzh.mockdependenciesandroiduitests.CoffeeDrinksApp
 import com.alexzh.mockdependenciesandroiduitests.R
 import com.alexzh.mockdependenciesandroiduitests.screens.common.UiState
+import com.alexzh.mockdependenciesandroiduitests.screens.list.exception.NoDataAvailableException
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class CoffeeDrinksActivity : AppCompatActivity() {
@@ -61,10 +61,9 @@ class CoffeeDrinksActivity : AppCompatActivity() {
 
     private fun showErrorMessage(throwable: Throwable) {
         errorMessage.setText(
-            if (throwable is UnknownHostException) {
-                R.string.error_network_message
-            } else {
-                R.string.error_unknown_message
+            when (throwable) {
+                is NoDataAvailableException -> R.string.error_network_message
+                else -> R.string.error_unknown_message
             }
         )
         progressBar.visibility = View.GONE
