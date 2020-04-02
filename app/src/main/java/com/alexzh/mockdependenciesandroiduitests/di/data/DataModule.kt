@@ -6,17 +6,20 @@ import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServic
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServiceFactory
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
-class DataModule {
+open class DataModule {
 
     @Provides
-    fun provideCoffeeDrinksService(): CoffeeDrinksService {
+    @Singleton
+    open fun provideCoffeeDrinksService(): CoffeeDrinksService {
         return CoffeeDrinksServiceFactory().create()
     }
 
     @Provides
-    fun provideCoffeeDrinksRepository(service: CoffeeDrinksService): DrinksRepository {
+    @Singleton
+    open fun provideCoffeeDrinksRepository(service: CoffeeDrinksService): DrinksRepository {
         return CoffeeDrinksRepository(service)
     }
 }
