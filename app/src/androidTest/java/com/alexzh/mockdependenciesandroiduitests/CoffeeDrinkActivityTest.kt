@@ -6,7 +6,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
-import com.alexzh.mockdependenciesandroiduitests.data.DrinksRepository
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksService
 import com.alexzh.mockdependenciesandroiduitests.di.coffeeDrinksModule
@@ -18,14 +17,13 @@ import org.junit.Test
 import org.koin.core.context.loadKoinModules
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import java.net.UnknownHostException
+import java.net.SocketTimeoutException
 
 class CoffeeDrinkActivityTest : KoinTest {
 
     @get:Rule
     val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java, true, false)
 
-    private val repository: DrinksRepository by inject()
     private val service: CoffeeDrinksService by inject()
 
     @Before
@@ -39,7 +37,7 @@ class CoffeeDrinkActivityTest : KoinTest {
             Drink(1L, "Coffee-1"),
             Drink(2L, "Coffee-2")
         )
-        coEvery { repository.getCoffeeDrinks() } returns drinks
+        coEvery { service.getCoffeeDrinks() } returns drinks
 
         activityRule.launchActivity(null)
 
@@ -48,13 +46,26 @@ class CoffeeDrinkActivityTest : KoinTest {
     }
 
     @Test
-    fun shouldDisplayErrorMessageWithTryAgainButton() {
-        coEvery { service.getCoffeeDrinks() } throws UnknownHostException("test")
+    fun shouldDisplayNoDataAvailableErrorMessageWithTryAgainButton() {
+        coEvery { service.getCoffeeDrinks() } returns emptyList()
 
         activityRule.launchActivity(null)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_network_message)))
+
+        onView(withId(R.id.tryAgain))
+            .check(matches(withText(R.string.try_again_label)))
+    }
+
+    @Test
+    fun shouldDisplayUnknownErrorMessageWithTryAgainButton() {
+        coEvery { service.getCoffeeDrinks() } throws SocketTimeoutException()
+
+        activityRule.launchActivity(null)
+
+        onView(withId(R.id.errorMessage))
+            .check(matches(withText(R.string.error_unknown_message)))
 
         onView(withId(R.id.tryAgain))
             .check(matches(withText(R.string.try_again_label)))
