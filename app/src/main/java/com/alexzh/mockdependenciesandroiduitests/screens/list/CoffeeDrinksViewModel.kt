@@ -11,9 +11,8 @@ import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrink
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
-class CoffeeDrinksViewModel @Inject constructor(
+class CoffeeDrinksViewModel constructor(
     private val repository: DrinksRepository,
     private val mapper: CoffeeDrinkMapper
 ): ViewModel() {
