@@ -9,33 +9,31 @@ import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksService
-import com.alexzh.mockdependenciesandroiduitests.di.DaggerTestAppComponent
-import com.alexzh.mockdependenciesandroiduitests.di.TestDataModule
+import com.alexzh.mockdependenciesandroiduitests.di.app.AppComponent
+import com.alexzh.mockdependenciesandroiduitests.di.data.DataModule
 import com.alexzh.mockdependenciesandroiduitests.screens.list.CoffeeDrinksActivity
-import io.mockk.coEvery
-import org.junit.Before
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
+import it.cosenonjaviste.daggermock.DaggerMock
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
-import java.net.SocketTimeoutException
-import javax.inject.Inject
 
 class CoffeeDrinkActivityTest {
 
     @get:Rule
+    val daggerMockRule = DaggerMock.rule<AppComponent>(DataModule()) {
+        set { appComponent ->
+            val app = InstrumentationRegistry.getInstrumentation()
+                .targetContext.applicationContext as CoffeeDrinksApp
+            app.setAppComponent(appComponent)
+        }
+    }
+
+    @get:Rule
     val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java, true, false)
 
-    @Inject
-    lateinit var service: CoffeeDrinksService
-
-    @Before
-    fun setUp() {
-        val app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as CoffeeDrinksApp
-        val appComponent = DaggerTestAppComponent.builder()
-            .dataModule(TestDataModule())
-            .build()
-        app.setAppComponent(appComponent)
-        appComponent.inject(this)
-    }
+    private val service: CoffeeDrinksService = mock()
 
     @Test
     fun shouldDisplayListOfCoffeesWith2Items() {
@@ -43,8 +41,9 @@ class CoffeeDrinkActivityTest {
             Drink(1L, "Coffee-1"),
             Drink(2L, "Coffee-2")
         )
-        coEvery { service.getCoffeeDrinks() } returns drinks
-
+        runBlocking {
+            whenever(service.getCoffeeDrinks()).thenReturn(drinks)
+        }
         activityRule.launchActivity(null)
 
         onView(withId(R.id.recyclerView))
@@ -53,8 +52,9 @@ class CoffeeDrinkActivityTest {
 
     @Test
     fun shouldDisplayNoDataAvailableErrorMessageWithTryAgainButton() {
-        coEvery { service.getCoffeeDrinks() } returns emptyList()
-
+        runBlocking {
+            whenever(service.getCoffeeDrinks()).thenReturn(emptyList())
+        }
         activityRule.launchActivity(null)
 
         onView(withId(R.id.errorMessage))
@@ -66,8 +66,9 @@ class CoffeeDrinkActivityTest {
 
     @Test
     fun shouldDisplayUnknownErrorMessageWithTryAgainButton() {
-        coEvery { service.getCoffeeDrinks() } throws SocketTimeoutException()
-
+        runBlocking {
+            whenever(service.getCoffeeDrinks()).thenThrow(RuntimeException())
+        }
         activityRule.launchActivity(null)
 
         onView(withId(R.id.errorMessage))

@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "kotlin-allopen"
+
+allOpen {
+    annotation("com.alexzh.mockdependenciesandroiduitests")
+}
 
 android {
     compileSdkVersion 29
@@ -49,10 +54,10 @@ dependencies {
     testImplementation 'junit:junit:4.13'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'io.mockk:mockk:1.9.3'
-    androidTestImplementation 'io.mockk:mockk-android:1.9.3'
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
+    androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    kaptAndroidTest 'com.google.dagger:dagger-compiler:2.27'
+    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.5'
 }
