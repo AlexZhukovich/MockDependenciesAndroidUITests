@@ -2,33 +2,24 @@ package com.alexzh.mockdependenciesandroiduitests.screens.list
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexzh.mockdependenciesandroiduitests.R
-import com.alexzh.mockdependenciesandroiduitests.data.CoffeeDrinksRepository
-import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksServiceFactory
 import com.alexzh.mockdependenciesandroiduitests.screens.common.UiState
 import com.alexzh.mockdependenciesandroiduitests.screens.list.exception.NoDataAvailableException
-import com.alexzh.mockdependenciesandroiduitests.screens.list.mapper.CoffeeDrinkMapper
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 
+@AndroidEntryPoint
 class CoffeeDrinksActivity : AppCompatActivity() {
 
-    private val adapter: CoffeeDrinkAdapter by lazy {
-        CoffeeDrinkAdapter()
-    }
+    private val viewModel by viewModels<CoffeeDrinksViewModel>()
 
-    private val viewModel: CoffeeDrinksViewModel by lazy {
-        val coffeeDrinksService = CoffeeDrinksServiceFactory().create()
-        val repository = CoffeeDrinksRepository(coffeeDrinksService)
-        val mapper = CoffeeDrinkMapper()
-        val factory = CoffeeDrinksViewModelFactory(repository, mapper)
-        ViewModelProvider(this, factory).get(CoffeeDrinksViewModel::class.java)
-    }
+    private val adapter: CoffeeDrinkAdapter by lazy { CoffeeDrinkAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

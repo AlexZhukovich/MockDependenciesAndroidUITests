@@ -2,8 +2,9 @@ package com.alexzh.mockdependenciesandroiduitests.screens.list.mapper
 
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.screens.list.model.CoffeeDrinkUI
+import javax.inject.Inject
 
-class CoffeeDrinkMapper {
+class CoffeeDrinkMapper @Inject constructor() {
 
     fun map(drinks: List<Drink>): List<CoffeeDrinkUI> {
         return drinks.map {
