@@ -1,11 +1,11 @@
 package com.alexzh.mockdependenciesandroiduitests
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksService
@@ -30,9 +30,6 @@ class CoffeeDrinkActivityTest {
         }
     }
 
-    @get:Rule
-    val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java, true, false)
-
     private val service: CoffeeDrinksService = mock()
 
     @Test
@@ -44,7 +41,7 @@ class CoffeeDrinkActivityTest {
         runBlocking {
             whenever(service.getCoffeeDrinks()).thenReturn(drinks)
         }
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.recyclerView))
             .check(matches(withItemCount(drinks.size)))
@@ -55,7 +52,7 @@ class CoffeeDrinkActivityTest {
         runBlocking {
             whenever(service.getCoffeeDrinks()).thenReturn(emptyList())
         }
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_network_message)))
@@ -69,7 +66,7 @@ class CoffeeDrinkActivityTest {
         runBlocking {
             whenever(service.getCoffeeDrinks()).thenThrow(RuntimeException())
         }
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_unknown_message)))
