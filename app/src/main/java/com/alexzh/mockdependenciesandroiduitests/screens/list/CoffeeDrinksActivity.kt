@@ -3,7 +3,6 @@ package com.alexzh.mockdependenciesandroiduitests.screens.list
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alexzh.mockdependenciesandroiduitests.R
@@ -27,7 +26,7 @@ class CoffeeDrinksActivity : AppCompatActivity() {
         setupUI()
 
         viewModel.loadDrinks()
-        viewModel.getCoffeeDrinks().observe(this, Observer {
+        viewModel.getCoffeeDrinks().observe(this, {
             when (it) {
                 is UiState.Loading -> showLoadingProcess()
                 is UiState.Success -> showCoffeeDrinks(it.data)

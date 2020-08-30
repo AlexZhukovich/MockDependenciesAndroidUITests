@@ -1,10 +1,10 @@
 package com.alexzh.mockdependenciesandroiduitests
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksService
@@ -12,7 +12,6 @@ import com.alexzh.mockdependenciesandroiduitests.di.coffeeDrinksModule
 import com.alexzh.mockdependenciesandroiduitests.screens.list.CoffeeDrinksActivity
 import io.mockk.coEvery
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.koin.core.context.loadKoinModules
 import org.koin.test.KoinTest
@@ -20,9 +19,6 @@ import org.koin.test.inject
 import java.net.SocketTimeoutException
 
 class CoffeeDrinkActivityTest : KoinTest {
-
-    @get:Rule
-    val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java, true, false)
 
     private val service: CoffeeDrinksService by inject()
 
@@ -39,7 +35,7 @@ class CoffeeDrinkActivityTest : KoinTest {
         )
         coEvery { service.getCoffeeDrinks() } returns drinks
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.recyclerView))
             .check(matches(withItemCount(drinks.size)))
@@ -49,7 +45,7 @@ class CoffeeDrinkActivityTest : KoinTest {
     fun shouldDisplayNoDataAvailableErrorMessageWithTryAgainButton() {
         coEvery { service.getCoffeeDrinks() } returns emptyList()
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_network_message)))
@@ -62,7 +58,7 @@ class CoffeeDrinkActivityTest : KoinTest {
     fun shouldDisplayUnknownErrorMessageWithTryAgainButton() {
         coEvery { service.getCoffeeDrinks() } throws SocketTimeoutException()
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_unknown_message)))

@@ -6,8 +6,8 @@ import androidx.test.espresso.IdlingPolicies
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.screens.list.CoffeeDrinksActivity
 import org.junit.After
@@ -21,11 +21,10 @@ import java.util.concurrent.TimeUnit
 class CoffeeDrinkActivityE2ETest {
 
     @get:Rule
-    val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java)
+    val scenarioRule = ActivityScenarioRule(CoffeeDrinksActivity::class.java)
 
     private val progressBarVisibility by lazy {
         ViewVisibilityIdlingResource(
-            activityRule.activity,
             R.id.progressBar,
             View.GONE
         )
