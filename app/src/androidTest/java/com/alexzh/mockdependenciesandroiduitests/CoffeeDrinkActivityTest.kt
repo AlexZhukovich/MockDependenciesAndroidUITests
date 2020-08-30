@@ -1,11 +1,11 @@
 package com.alexzh.mockdependenciesandroiduitests
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.data.model.Drink
 import com.alexzh.mockdependenciesandroiduitests.data.network.CoffeeDrinksService
@@ -14,15 +14,11 @@ import com.alexzh.mockdependenciesandroiduitests.di.TestDataModule
 import com.alexzh.mockdependenciesandroiduitests.screens.list.CoffeeDrinksActivity
 import io.mockk.coEvery
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class CoffeeDrinkActivityTest {
-
-    @get:Rule
-    val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java, true, false)
 
     @Inject
     lateinit var service: CoffeeDrinksService
@@ -35,6 +31,8 @@ class CoffeeDrinkActivityTest {
             .build()
         app.setAppComponent(appComponent)
         appComponent.inject(this)
+
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
     }
 
     @Test
@@ -45,7 +43,7 @@ class CoffeeDrinkActivityTest {
         )
         coEvery { service.getCoffeeDrinks() } returns drinks
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.recyclerView))
             .check(matches(withItemCount(drinks.size)))
@@ -55,7 +53,7 @@ class CoffeeDrinkActivityTest {
     fun shouldDisplayNoDataAvailableErrorMessageWithTryAgainButton() {
         coEvery { service.getCoffeeDrinks() } returns emptyList()
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_network_message)))
@@ -68,7 +66,7 @@ class CoffeeDrinkActivityTest {
     fun shouldDisplayUnknownErrorMessageWithTryAgainButton() {
         coEvery { service.getCoffeeDrinks() } throws SocketTimeoutException()
 
-        activityRule.launchActivity(null)
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
 
         onView(withId(R.id.errorMessage))
             .check(matches(withText(R.string.error_unknown_message)))
