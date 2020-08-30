@@ -1,13 +1,13 @@
 package com.alexzh.mockdependenciesandroiduitests
 
 import android.view.View
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingPolicies
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import com.alexzh.mockdependenciesandroiduitests.RecyclerViewMatchers.withItemCount
 import com.alexzh.mockdependenciesandroiduitests.screens.list.CoffeeDrinksActivity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -26,12 +26,8 @@ class CoffeeDrinkActivityE2ETest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @get:Rule
-    val activityRule = ActivityTestRule(CoffeeDrinksActivity::class.java)
-
     private val progressBarVisibility by lazy {
         ViewVisibilityIdlingResource(
-            activityRule.activity,
             R.id.progressBar,
             View.GONE
         )
@@ -42,6 +38,8 @@ class CoffeeDrinkActivityE2ETest {
         hiltRule.inject()
         IdlingPolicies.setIdlingResourceTimeout(1, TimeUnit.SECONDS)
         IdlingRegistry.getInstance().register(progressBarVisibility)
+
+        ActivityScenario.launch(CoffeeDrinksActivity::class.java)
     }
 
     @Test

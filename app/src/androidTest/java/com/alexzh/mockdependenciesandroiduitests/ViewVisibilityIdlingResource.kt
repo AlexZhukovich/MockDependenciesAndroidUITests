@@ -1,11 +1,9 @@
 package com.alexzh.mockdependenciesandroiduitests
 
-import android.app.Activity
 import android.view.View
 import androidx.test.espresso.IdlingResource
 
 class ViewVisibilityIdlingResource(
-    private val activity: Activity,
     private val viewId: Int,
     private val expectedVisibility: Int
 ) : IdlingResource {
@@ -17,6 +15,7 @@ class ViewVisibilityIdlingResource(
     }
 
     override fun isIdleNow(): Boolean {
+        val activity = ActivityInstance.getInstance()
         val view: View? = activity.findViewById(viewId)
         val isIdleNow = if (view != null) {
             view.visibility == expectedVisibility
